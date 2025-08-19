@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room {{ room_code }}</title>
+    <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://s4.zstatic.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/popper.js/2.11.8/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/room.js') }}"></script>
+    <style>
+        body,
+        html {
+            background-color: #0a0a2a;
+            /* 深蓝色背景 */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            /* 半透明白色背景 */
+            border-radius: 10px;
+            /* 圆角 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* 阴影效果 */
+        }
+
+        #player-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .notification {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            animation: fadeInOut 3s forwards;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .wolf-chat-container {
+            height: 400px; /* 根据需要调整高度 */
+            width: 300px; /* 根据需要调整宽度 */
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            transition: right 0.3s ease;
+        }
+
+        .chat-messages {
+            height: 300px;
+            /* 设置一个固定的高度 */
+            overflow-y: auto;
+            /* 当内容超出高度时启用垂直滚动条 */
+            border: 1px solid #ddd;
+            /* 可选：添加边框以区分聊天区域 */
+            padding: 10px;
+            /* 可选：添加内边距使消息与边框之间有空间 */
+            background-color: #fff;
+            /* 可选：设置背景颜色 */
+        }
+
+        .chat-messages div {
+            margin-bottom: 10px;
+        }
+
+        .negative {
+            color: red;
+        }
+
+        .kick-button {
+            /* background-color: red;
+            color: white; */
+            border-radius: 50%;
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .kick-button i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 使图标精确居中 */
+        }
+
+        .toggle-wolf-chat-btn {
+            position: absolute;
+            top: 50%;
+            left: -40px; /* 使按钮位于容器左侧 */
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            border-radius: 10px 0 0 10px;
+            width: 10px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-wolf-chat-btn i {
+            font-size: 20px;
+            color: #0a0a2a;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-wolf-chat-btn.hidden i {
+            transform: rotate(180deg);
+        }
+
+        .wolf-chat-container.hidden {
+            right: -300px; /* 隐藏到右边 */
+        }
+</style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Room {{ room_code }}</h1>
+        <div class="row"></div>
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert" id="role-counts">
+                角色数量: 狼人 <span id="role-wolf">0</span>, 预言家 <span id="role-seer">0</span>, 女巫 <span
+                    id="role-witch">0</span>, 猎人 <span id="role-hunter">0</span>, 骑士 <span id="role-knight">0</span>, 村民 <span id="role-villager">0</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Chat messages will be displayed here -->
+                    </div>
+                    <form id="send-message-form">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="message-input" maxlength="512"
+                                placeholder="Type your message..." required>
+                            <button class="btn btn-primary" type="submit" id="send-message-btn">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h3>Players</h3>
+                <ul class="list-group" id="player-list">
+                    {% for player, data in players.items() %}
+                    <li class="list-group-item" id="player-{{ player }}">{{ player }}{% if data.role %} ({{ data.role
+                        }}){%
+                        endif %}</li>
+                    {% endfor %}
+                </ul>
+                <button class="btn btn-success w-100 add-ai-button" style="display: none;">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <button class="btn btn-secondary" id="abstain-button" style="display: none;"
+            onclick="selectPlayer(null)">弃权</button>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="role" id="spectator" value="0" checked>
+                    <label class="form-check-label" for="spectator">旁观</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="role" id="participant" value="1">
+                    <label class="form-check-label" for="participant">加入游戏</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4" id="role-configuration" style="display: none;">
+            <div class="col-md-12">
+                <h3>角色配置</h3>
+                <div class="form-group row">
+                    <label for="wolf" class="col-sm-2 col-form-label">狼人</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="wolf" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="seer" class="col-sm-2 col-form-label">预言家</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="seer" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="witch" class="col-sm-2 col-form-label">女巫</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="witch" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="hunter" class="col-sm-2 col-form-label">猎人</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="hunter" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="knight" class="col-sm-2 col-form-label">骑士</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="knight" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="villager" class="col-sm-2 col-form-label">村民</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="villager" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="remaining" class="col-sm-2 col-form-label">剩余人数</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="remaining" min="0" value="0" readonly>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-success" id="start-game">开始游戏</button>
+            </div>
+        </div>
+
+        <!-- Wolf Chat Container -->
+        <div class="wolf-chat-container" id="wolf-chat-container">
+            <button class="toggle-wolf-chat-btn" id="toggle-wolf-chat-btn">
+                <i class="fas fa-angle-left"></i>
+            </button>
+            <h4 class="text-center">Wolf Chat</h4>
+            <div class="chat-messages" id="wolf-chat-messages">
+                <!-- Wolf chat messages will be displayed here -->
+            </div>
+            <form id="send-wolf-message-form">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="wolf-message-input" maxlength="512" placeholder="Type your wolf message..." required>
+                    <button class="btn btn-primary" type="submit" id="send-wolf-message-btn">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="notification-container" id="notification-container"></div>
+    <script>
+        const roomCode = "{{ room_code }}";
+    </script>
+</body>
+
+</html>
