@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+.chat {
+    margin-bottom: 20px;
+}
+
+#chat-box {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#chat-form {
+    display: flex;
+    justify-content: space-between;
+}
+
+#message {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.players {
+    margin-bottom: 20px;
+}
+
+.players ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.players li {
+    margin: 5px 0;
+}
+
+.owner-actions button {
+    margin-right: 10px;
+}
+
+.table {
+    text-align: center;
+}
+
+.chat-messages {
+    height: 300px; /* 设置一个固定的高度 */
+    overflow-y: auto; /* 当内容超出高度时启用垂直滚动条 */
+    border: 1px solid #ddd; /* 可选：添加边框以区分聊天区域 */
+    padding: 10px; /* 可选：添加内边距使消息与边框之间有空间 */
+    background-color: #fff; /* 可选：设置背景颜色 */
+}
