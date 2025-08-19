@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+    <h1>Game Room {{ room_code }}</h1>
+    <div class="container">
+        <div class="table">
+            <svg width="600" height="600" viewBox="-300 -300 600 600">
+                <circle cx="0" cy="0" r="250" stroke="black" stroke-width="2" fill="white" />
+                {% for i, player in enumerate(players) %}
+                    <text x="{{ 250 * cos(i * 2 * pi / len(players)) }}" y="{{ 250 * sin(i * 2 * pi / len(players)) }}" text-anchor="middle" dy=".3em">{{ player }}</text>
+                {% endfor %}
+            </svg>
+        </div>
+        <div class="chat">
+            <div id="chat-box"></div>
+            <form id="chat-form">
+                <input type="text" id="message" placeholder="Type your message..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
