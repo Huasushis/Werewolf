@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wooolf</title>
+    <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0a0a2a; /* 深蓝色背景 */
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+            width: 240px;
+        }
+        .rule-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .btn-block {
+            width: 100%;
+        }
+        pre {
+            white-space: pre-wrap; /* 保留文本格式并允许换行 */
+            word-wrap: break-word; /* 允许长单词或 URL 断行到下一行 */
+            font-family: inherit; /* 继承父元素的字体 */
+            background-color: transparent; /* 透明背景 */
+            border: none; /* 无边框 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Wooolf</h1>
+        <div class="d-flex flex-column gap-3">
+            <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#createRoomModal">
+                创建房间
+            </button>
+            <button type="button" class="btn btn-secondary btn-block" data-bs-toggle="modal" data-bs-target="#joinRoomModal">
+                加入房间
+            </button>
+        </div>
+        <button type="button" class="btn btn-info rule-btn" data-bs-toggle="modal" data-bs-target="#rulesModal">
+            规则
+        </button>
+    </div>
+
+    <!-- Create Room Modal -->
+    <div class="modal fade" id="createRoomModal" tabindex="-1" aria-labelledby="createRoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createRoomModalLabel">创建房间</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-room-form">
+                        <div class="mb-3">
+                            <label for="room-code" class="form-label">房间代码</label>
+                            <input type="text" class="form-control" id="room-code" placeholder="输入房间代码" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">密码（可选）</label>
+                            <input type="password" class="form-control" id="password" placeholder="输入密码">
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="username" placeholder="输入用户名" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">创建房间</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Room Modal -->
+    <div class="modal fade" id="joinRoomModal" tabindex="-1" aria-labelledby="joinRoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="joinRoomModalLabel">加入房间</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="join-room-form">
+                        <div class="mb-3">
+                            <label for="room-code-join" class="form-label">房间代码</label>
+                            <input type="text" class="form-control" id="room-code-join" placeholder="输入房间代码" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password-join" class="form-label">密码（如果需要）</label>
+                            <input type="password" class="form-control" id="password-join" placeholder="输入密码">
+                        </div>
+                        <div class="mb-3">
+                            <label for="username-join" class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="username-join" placeholder="输入用户名" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">加入房间</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules Modal -->
+    <div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rulesModalLabel">游戏规则</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="rules-content">
+                    <!-- 规则内容将在这里动态加载 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://s4.zstatic.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/popper.js/2.11.8/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
