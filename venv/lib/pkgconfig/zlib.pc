@@ -1,0 +1,13 @@
+prefix=/home/ubuntu/wolfkiller/venv
+exec_prefix=/home/ubuntu/wolfkiller/venv
+libdir=/home/ubuntu/wolfkiller/venv/lib
+sharedlibdir=/home/ubuntu/wolfkiller/venv/lib
+includedir=/home/ubuntu/wolfkiller/venv/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
